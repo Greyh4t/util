@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+var LF = "\n"
+
 func Exec(command string, timeout time.Duration) (string, string, error) {
 	cmd := exec.Command("bash", "-c", command)
 	var o, e bytes.Buffer

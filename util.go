@@ -3,8 +3,11 @@ package util
 import (
 	"bufio"
 	"crypto/md5"
+	"encoding/base64"
 	"encoding/hex"
+	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path"
@@ -19,36 +22,6 @@ import (
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
-const (
-	FullTime = 0
-	DateTime = 1
-	TimeTime = 2
-)
-
-var LF string
-
-func Init() {
-	switch runtime.GOOS {
-	case "windows":
-		LF = "\r\n"
-	case "darwin":
-		LF = "\r"
-	default:
-		LF = "\n"
-	}
-}
-
-func Now(timeType int) string {
-	switch timeType {
-	case DateTime:
-		return time.Now().Format("2006-01-02")
-	case TimeTime:
-		return time.Now().Format("03:04:05")
-	default:
-		return time.Now().Format("2006-01-02 03:04:05")
-	}
-}
-
 func Md5(t []byte) string {
 	h := md5.New()
 	h.Write(t)
@@ -56,24 +29,62 @@ func Md5(t []byte) string {
 	return hex.EncodeToString(cipherStr)
 }
 
-func Min(first int, rest ...int) int {
-	min := first
-	for _, v := range rest {
-		if v < min {
-			min = v
+func B64Encode(src []byte) string {
+	return base64.StdEncoding.EncodeToString(src)
+}
+
+func B64Decode(src string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(src)
+}
+
+func RandNum(min, max int) int {
+	if min > max {
+		min, max = max, min
+	}
+	if min == max {
+		return min
+	}
+	rand.Seed(time.Now().UnixNano())
+	randNum := rand.Intn(max - min)
+	randNum += min
+	return randNum
+}
+
+func RandStr(n int, letters string) string {
+	if letters == "" {
+		letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	}
+	b := make([]byte, n)
+	rand.Seed(time.Now().UnixNano())
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
+}
+
+func Min(num ...int) int {
+	min := num[0]
+	for _, n := range num {
+		if min > n {
+			min = n
 		}
 	}
 	return min
 }
 
-func Max(first int, rest ...int) int {
-	max := first
-	for _, v := range rest {
-		if v > max {
-			max = v
+func Max(num ...int) int {
+	max := num[0]
+	for _, n := range num {
+		if max < n {
+			max = n
 		}
 	}
 	return max
+}
+
+func ReadFile(file string) (string, error) {
+	buf, err := ioutil.ReadFile(file)
+	return string(buf), err
 }
 
 func ReadLines(file string) ([]string, error) {
@@ -114,6 +125,24 @@ func LeftPad(str, pad string, length int) string {
 
 func RightPad(str, pad string, length int) string {
 	return str + strings.Repeat(pad, length-len(str))
+}
+
+func SubStr(s string, start, length int) string {
+	r := []rune(s)
+	l := len(r)
+	start = start % l
+	if start < 0 {
+		start = l + start
+	}
+	length = length % l
+	if length < 0 {
+		length = l + length
+	}
+	end := start + length
+	if end <= l {
+		return string(r[start:end])
+	}
+	return ""
 }
 
 func SplitList(list []string, per int) [][]string {

@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+var LF = "\r\n"
+
 func Exec(command string, timeout time.Duration) (string, string, error) {
 	cmd := exec.Command("cmd", "/c", command)
 	var o, e bytes.Buffer
