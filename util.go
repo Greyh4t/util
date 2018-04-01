@@ -38,11 +38,11 @@ func B64Decode(src string) ([]byte, error) {
 }
 
 func RandNum(min, max int) int {
-	if min > max {
-		min, max = max, min
-	}
 	if min == max {
 		return min
+	}
+	if min > max {
+		min, max = max, min
 	}
 	rand.Seed(time.Now().UnixNano())
 	randNum := rand.Intn(max - min)
