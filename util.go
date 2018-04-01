@@ -20,6 +20,7 @@ import (
 )
 
 const (
+	FullTime = 0
 	DateTime = 1
 	TimeTime = 2
 )
