@@ -164,7 +164,7 @@ func SplitList(list []string, per int) [][]string {
 	return rlines
 }
 
-func GBK2Utf8(in []byte) []byte {
+func GBK2UTF8(in []byte) []byte {
 	if !utf8.Valid(in) {
 		out, err := simplifiedchinese.GB18030.NewDecoder().Bytes(in)
 		if err == nil {

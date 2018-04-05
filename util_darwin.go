@@ -17,6 +17,11 @@ func Exec(command string, timeout time.Duration) (string, string, error) {
 	cmd.Stderr = &e
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
+	err := cmd.Start()
+	if err != nil {
+		return "", "", err
+	}
+
 	if timeout > 0 {
 		timer := time.AfterFunc(timeout, func() {
 			syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
@@ -24,10 +29,6 @@ func Exec(command string, timeout time.Duration) (string, string, error) {
 		defer timer.Stop()
 	}
 
-	err := cmd.Start()
-	if err != nil {
-		return "", "", err
-	}
 	err = cmd.Wait()
 
 	return o.String(), e.String(), err

@@ -15,6 +15,11 @@ func Exec(command string, timeout time.Duration) (string, string, error) {
 	cmd.Stdout = &o
 	cmd.Stderr = &e
 
+	err := cmd.Start()
+	if err != nil {
+		return "", "", err
+	}
+
 	if timeout > 0 {
 		timer := time.AfterFunc(timeout, func() {
 			c := exec.Command("taskkill", "/t", "/f", "/pid", strconv.Itoa(cmd.Process.Pid))
@@ -23,11 +28,7 @@ func Exec(command string, timeout time.Duration) (string, string, error) {
 		defer timer.Stop()
 	}
 
-	err := cmd.Start()
-	if err != nil {
-		return "", "", err
-	}
 	err = cmd.Wait()
 
-	return string(GBK2Utf8(o.Bytes())), string(GBK2Utf8(e.Bytes())), err
+	return string(GBK2UTF8(o.Bytes())), string(GBK2UTF8(e.Bytes())), err
 }
