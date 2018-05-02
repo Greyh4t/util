@@ -119,6 +119,23 @@ func Append2File(file, text string) (int, error) {
 	return f.WriteString(text)
 }
 
+func WriteLines(file string, lines []string) (int, error) {
+	f, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		return 0, err
+	}
+	defer f.Close()
+	var i int
+	var line string
+	for i, line = range lines {
+		_, err := f.WriteString(line + "\n")
+		if err != nil {
+			return i, err
+		}
+	}
+	return i + 1, nil
+}
+
 func LeftPad(str, pad string, length int) string {
 	return strings.Repeat(pad, length-len(str)) + str
 }
