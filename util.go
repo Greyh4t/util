@@ -128,7 +128,7 @@ func WriteLines(file string, lines []string) (int, error) {
 	var i int
 	var line string
 	for i, line = range lines {
-		_, err := f.WriteString(line + "\n")
+		_, err := f.WriteString(line + LF)
 		if err != nil {
 			return i, err
 		}
