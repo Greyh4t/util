@@ -224,3 +224,21 @@ func SelfName() string {
 	_, name := path.Split(strings.Replace(absFile, `\`, "/", -1))
 	return name
 }
+
+func Encrypt(src string, key string) string {
+	r := ""
+	var x int
+	var srcR = []rune(src)
+	for i := 0; i < len(srcR); i++ {
+		x = int(srcR[i])
+		for j := 0; j < len(key); j++ {
+			x ^= int(key[j])
+		}
+		r += string(rune(x))
+	}
+	return r
+}
+
+func Decrypt(src string, key string) string {
+	return Encrypt(src, key)
+}
