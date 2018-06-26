@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"math/rand"
+	"net"
 	"os"
 	"os/exec"
 	"path"
@@ -241,4 +242,27 @@ func Encrypt(src string, key string) string {
 
 func Decrypt(src string, key string) string {
 	return Encrypt(src, key)
+}
+
+func IsPublicIP(IP net.IP) bool {
+	if IP.IsLoopback() || IP.IsLinkLocalMulticast() || IP.IsLinkLocalUnicast() {
+		return false
+	}
+	if ip4 := IP.To4(); ip4 != nil {
+		switch true {
+		case ip4[0] == 10:
+			return false
+		case ip4[0] == 172 && ip4[1] >= 16 && ip4[1] <= 31:
+			return false
+		case ip4[0] == 192 && ip4[1] == 168:
+			return false
+		case ip4[0] == 100 && ip4[1] >= 64 && ip4[1] <= 127:
+			return false
+		case ip4[0] == 169 && ip4[1] == 254:
+			return false
+		default:
+			return true
+		}
+	}
+	return false
 }
