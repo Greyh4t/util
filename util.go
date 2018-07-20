@@ -23,6 +23,10 @@ import (
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 func Md5(t []byte) string {
 	h := md5.New()
 	h.Write(t)
@@ -45,8 +49,7 @@ func RandNum(min, max int) int {
 	if min > max {
 		min, max = max, min
 	}
-	rand.Seed(time.Now().UnixNano())
-	randNum := rand.Intn(max - min)
+	randNum := rand.Intn(max - min + 1)
 	randNum += min
 	return randNum
 }
@@ -56,7 +59,6 @@ func RandStr(n int, letters string) string {
 		letters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	}
 	b := make([]byte, n)
-	rand.Seed(time.Now().UnixNano())
 	for i := range b {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
