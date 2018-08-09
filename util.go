@@ -11,7 +11,6 @@ import (
 	"net"
 	"os"
 	"os/exec"
-	"path"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -224,11 +223,11 @@ func SelfPid() int {
 func SelfName() string {
 	file, _ := exec.LookPath(os.Args[0])
 	absFile, _ := filepath.Abs(file)
-	_, name := path.Split(strings.Replace(absFile, `\`, "/", -1))
+	_, name := filepath.Split(absFile)
 	return name
 }
 
-func Encrypt(src string, key string) string {
+func XOREncrypt(src string, key string) string {
 	r := ""
 	var x int
 	var srcR = []rune(src)
@@ -242,8 +241,8 @@ func Encrypt(src string, key string) string {
 	return r
 }
 
-func Decrypt(src string, key string) string {
-	return Encrypt(src, key)
+func XORDecrypt(src string, key string) string {
+	return XOREncrypt(src, key)
 }
 
 func IsPublicIP(IP net.IP) bool {
