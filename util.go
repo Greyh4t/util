@@ -29,8 +29,7 @@ func init() {
 func Md5(t []byte) string {
 	h := md5.New()
 	h.Write(t)
-	cipherStr := h.Sum(nil)
-	return hex.EncodeToString(cipherStr)
+	return hex.EncodeToString(h.Sum(nil))
 }
 
 func B64Encode(src []byte) string {
@@ -48,9 +47,7 @@ func RandNum(min, max int) int {
 	if min > max {
 		min, max = max, min
 	}
-	randNum := rand.Intn(max - min + 1)
-	randNum += min
-	return randNum
+	return rand.Intn(max - min + 1) + min
 }
 
 func RandStr(n int, letters string) string {
