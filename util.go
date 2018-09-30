@@ -47,7 +47,7 @@ func RandNum(min, max int) int {
 	if min > max {
 		min, max = max, min
 	}
-	return rand.Intn(max - min + 1) + min
+	return rand.Intn(max-min+1) + min
 }
 
 func RandStr(n int, letters string) string {
@@ -263,4 +263,23 @@ func IsPublicIP(IP net.IP) bool {
 		}
 	}
 	return false
+}
+
+func TimeStep(start, end time.Time, step time.Duration) func() (time.Time, time.Time, bool) {
+	asc := start.Before(end)
+	if (asc && step > 0) || (!asc && step < 0 && !start.Equal(end)) {
+		start = start.Add(-1 * step)
+		return func() (time.Time, time.Time, bool) {
+			start = start.Add(step)
+			newend := start.Add(step)
+			if newend.Equal(end) || (asc && newend.After(end)) || (!asc && newend.Before(end)) {
+				return start, end, false
+			}
+			return start, newend, true
+		}
+	}
+
+	return func() (time.Time, time.Time, bool) {
+		return start, end, false
+	}
 }
