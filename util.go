@@ -283,3 +283,12 @@ func TimeStep(start, end time.Time, step time.Duration) func() (time.Time, time.
 		return start, end, false
 	}
 }
+
+func MaskSize(mask string) int {
+	ipMask := net.IPMask(net.ParseIP(mask).To4())
+	ones, bits := ipMask.Size()
+	if bits == 0 {
+		return -1
+	}
+	return ones
+}
