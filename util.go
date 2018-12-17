@@ -18,6 +18,7 @@ import (
 	"syscall"
 	"time"
 	"unicode/utf8"
+	"unsafe"
 
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
@@ -291,4 +292,14 @@ func MaskSize(mask string) int {
 		return -1
 	}
 	return ones
+}
+
+//convert string to []byte without copy
+func StringBytes(s string) []byte {
+	return *(*[]byte)(unsafe.Pointer(&s))
+}
+
+// convert []byte to string without copy
+func BytesString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
 }
