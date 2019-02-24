@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os/exec"
 	"strconv"
+	"syscall"
 	"time"
 )
 
@@ -11,6 +12,7 @@ var LF = "\r\n"
 
 func Exec(command string, timeout time.Duration) (string, string, error) {
 	cmd := exec.Command("cmd", "/c", command)
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	var o, e bytes.Buffer
 	cmd.Stdout = &o
 	cmd.Stderr = &e
