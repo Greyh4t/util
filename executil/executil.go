@@ -5,7 +5,7 @@ import (
 	"context"
 	"io"
 	"os/exec"
-	"util/encoding/converter"
+	"github.com/greyh4t/util/encoding/converter"
 )
 
 type Cmd struct {

@@ -1,4 +1,4 @@
-module util
+module github.com/greyh4t/util
 
 go 1.15
 
