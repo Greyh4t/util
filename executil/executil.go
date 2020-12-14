@@ -5,7 +5,6 @@ import (
 	"context"
 	"io"
 	"os/exec"
-	"github.com/greyh4t/util/encoding/converter"
 )
 
 type Cmd struct {
@@ -30,7 +29,7 @@ func (c *Cmd) Run() ([]byte, []byte, error) {
 		return nil, nil, err
 	}
 
-	return converter.GBKToUTF8(o.Bytes()), converter.GBKToUTF8(e.Bytes()), nil
+	return o.Bytes(), e.Bytes(), nil
 }
 
 // Start 执行命令，非阻塞，返回stdout对应的reader
